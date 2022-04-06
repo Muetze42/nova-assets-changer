@@ -39,3 +39,4 @@ I make not a release for every example. For all example resources take a look in
 * [Add target="_blank" to footer link](resources/Nova/js/layouts/Footer.vue)
 * [Close mobile menu after navigate](resources/Nova/js/layouts/MainHeader.vue)
 * [Translate Email Address on login page](resources/Nova/js/pages/Login.vue)
+* [Don't go to the detail view when clicking on a row in the index view](resources/Nova/js/components/ResourceTableRow.vue)
