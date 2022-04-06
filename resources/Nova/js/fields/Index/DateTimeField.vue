@@ -1,3 +1,4 @@
+<!-- Remove timezone -->
 <template>
   <div :class="`text-${field.textAlign}`">
     <span v-if="field.value" class="whitespace-nowrap">

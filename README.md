@@ -1,19 +1,30 @@
-# Customize Nova 4 Vue.js Assets
+# Nova Assets Changer
+This package is for Nova 4 and swaps the resources from the `resources/Nova` folder with those in the `vendor/laravel/nova/resources/js` folder. 
+Then the assets are recompiled and published with the Force option.
 
-No package. But a working snipped....
+Attention. The original vendor files will be overwritten.
 
-## Description
-Copy the files you want to change from folder `vendor/laravel/nova/resources/js` to folder `resources/Nova` and adjust them according to your wishes.  
+## Install
+```
+composer require norman-huth/nova-assets-changer
+```
 
-## Command  
-The [`php artisan nova:update`](app/Console/Commands/Nova/NovaUpdateCommand.php) command install npm dependencies in the Nova vendor folder, 
-replaces the components and run the Nova production command.   
-Attention. The files in the Nova vendor folder will be changed!
-Next, the newly generated Nova assets will be published with the force option.  
----
-You can skip `npm install` with `php artisan nova:update --without-npm-install`
+### Optional
+Publish example resources
+```
+php artisan vendor:publish --provider="NormanHuth\NovaAssetsChanger\PackageServiceProvider"
+```
 
-### Important
-### Todo after a `laravel/nova` update:
-* Align the Nova app files `resources/Nova` with the Nova vendor files `vendor/laravel/nova/resources/js`
-* Run the [`nova:update`](app/Console/Commands/Nova/NovaUpdateCommand.php) command
+### Running
+For the full process run this command:
+```
+php artisan nova:custom-assets
+```
+
+If you want to skip NPM install use this command:
+```
+php artisan nova:custom-assets --without-npm-install
+```
+
+## Notice
+After a Nova update, you need to check your resource files to see if they are still compatible.

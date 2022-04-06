@@ -1,3 +1,4 @@
+<!-- Remove timezone -->
 <template>
   <PanelItem :index="index" :field="field">
     <template #value>

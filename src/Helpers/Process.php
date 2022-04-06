@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Helpers;
+namespace NormanHuth\NovaAssetsChanger\Helpers;
 
 use Illuminate\Support\Facades\Log;
 

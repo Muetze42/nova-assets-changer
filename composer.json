@@ -1,0 +1,25 @@
+{
+    "name": "norman-huth/nova-assets-changer",
+    "autoload": {
+        "psr-4": {
+            "NormanHuth\\NovaAssetsChanger\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Norman Huth",
+            "email": "norman@huth.it",
+            "homepage": "https://huth.it"
+        }
+    ],
+    "require": {
+        "laravel/nova": "^4.0.0"
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "NormanHuth\\NovaAssetsChanger\\PackageServiceProvider"
+            ]
+        }
+    }
+}

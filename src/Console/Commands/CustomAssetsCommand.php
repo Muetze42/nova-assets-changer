@@ -1,18 +1,18 @@
 <?php
 
-namespace App\Console\Commands\Nova;
+namespace NormanHuth\NovaAssetsChanger\Console\Commands;
 
-use App\Helpers\Process;
+use NormanHuth\NovaAssetsChanger\Helpers\Process;
 use Illuminate\Console\Command;
 
 /**
  * Todo: `nova:update` currently not exist in nova. Adjust this command if this changes
  */
-class NovaUpdateCommand extends Command
+class CustomAssetsCommand extends Command
 {
     protected string $novaPath;
-    protected string $novaJsPath;
-    protected string $appJsPath;
+    protected string $novaResourcesPath;
+    protected string $appResourcePath;
     protected Process $process;
     protected string $ds = DIRECTORY_SEPARATOR;
 
@@ -21,7 +21,7 @@ class NovaUpdateCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'nova:update {--without-npm-install}';
+    protected $signature = 'nova:custom-assets {--without-npm-install}';
 
     /**
      * The console command description.
@@ -39,15 +39,15 @@ class NovaUpdateCommand extends Command
     {
         $npmInstall = !$this->option('without-npm-install');
         $this->novaPath = base_path('vendor'.$this->ds.'laravel'.$this->ds.'nova');
-        $this->novaJsPath = $this->novaPath.$this->ds.'resources'.$this->ds.'js';
-        $this->appJsPath = resource_path('Nova'.$this->ds.'js');
+        $this->novaResourcesPath = $this->novaPath.$this->ds.'resources';
+        $this->appResourcePath = resource_path('Nova'.$this->ds.'Nova');
         $this->process = new Process;
 
         $this->webpack();
         if ($npmInstall) {
             $this->installNPM();
         }
-        $this->replaceComponents($this->appJsPath);
+        $this->replaceComponents($this->appResourcePath);
         $this->productionRun();
         $this->info('Publish Nova assets');
         $this->call('vendor:publish', [
@@ -76,7 +76,7 @@ class NovaUpdateCommand extends Command
                 continue;
             }
             if (str_ends_with($file, '.vue')) {
-                $target = $this->novaJsPath.str_replace($this->appJsPath, '', $file);
+                $target = $this->novaResourcesPath.str_replace($this->appResourcePath, '', $file);
                 $this->line('Replace file: '.$file);
                 $this->replaceComponent($file, $target);
             } elseif (is_dir($file)) {

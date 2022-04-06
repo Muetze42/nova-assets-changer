@@ -1,3 +1,4 @@
+<!-- Translate Email Address -->
 <template>
   <div>
     <Head :title="__('Log In')" />
