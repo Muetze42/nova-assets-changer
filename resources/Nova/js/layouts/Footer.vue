@@ -1,3 +1,4 @@
+<!-- Changing the copyright is against the license. It was only target blank added to the link. -->
 <template>
   <div class="mt-8 leading-normal text-xs text-gray-500 space-y-1">
     <p class="text-center">
