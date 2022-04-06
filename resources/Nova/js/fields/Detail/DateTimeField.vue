@@ -1,4 +1,4 @@
-<!-- Remove timezone -->
+<!-- Remove timezone from DateTime field -->
 <template>
   <PanelItem :index="index" :field="field">
     <template #value>

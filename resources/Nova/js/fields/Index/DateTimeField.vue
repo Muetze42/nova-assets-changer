@@ -1,4 +1,4 @@
-<!-- Remove timezone -->
+<!-- Remove timezone from DateTime field -->
 <template>
   <div :class="`text-${field.textAlign}`">
     <span v-if="field.value" class="whitespace-nowrap">

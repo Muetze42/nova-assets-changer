@@ -28,3 +28,14 @@ php artisan nova:custom-assets --without-npm-install
 
 ## Notice
 After a Nova update, you need to check your resource files to see if they are still compatible.
+
+___
+## Examples
+I make not a release for every example. For all example resources take a look in the `resources` folder of the GitHub repository
+
+* [Remove preview from index dropdown](resources/Nova/js/components/Dropdowns/InlineActionDropdown.vue)
+* [Remove timezone from DateTime field - detail view](resources/Nova/js/fields/Detail/DateTimeField.vue)
+* [Remove timezone from DateTime field - index view](resources/Nova/js/fields/Index/DateTimeField.vue)
+* [Add target="_blank" to footer link](resources/Nova/js/layouts/Footer.vue)
+* [Close mobile menu after navigate](resources/Nova/js/layouts/MainHeader.vue)
+* [Translate Email Address on login page](resources/Nova/js/pages/Login.vue)
