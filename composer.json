@@ -1,5 +1,6 @@
 {
     "name": "norman-huth/nova-assets-changer",
+    "license": "MIT",
     "autoload": {
         "psr-4": {
             "NormanHuth\\NovaAssetsChanger\\": "src/"
