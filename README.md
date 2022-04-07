@@ -40,3 +40,6 @@ I make not a release for every example. For all example resources take a look in
 * [Close mobile menu after navigate](resources/Nova/js/layouts/MainHeader.vue)
 * [Translate Email Address on login page](resources/Nova/js/pages/Login.vue)
 * [Don't go to the detail view when clicking on a row in the index view](resources/Nova/js/components/ResourceTableRow.vue)
+
+## Update info
+Since version 1.0.5, this package creates a backup file. Please reinstall Nova before use.
