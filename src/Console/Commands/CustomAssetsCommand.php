@@ -2,8 +2,8 @@
 
 namespace NormanHuth\NovaAssetsChanger\Console\Commands;
 
-use NormanHuth\NovaAssetsChanger\Helpers\Process;
 use Illuminate\Console\Command;
+use NormanHuth\NovaAssetsChanger\Helpers\Process;
 
 /**
  * Todo: `nova:update` currently not exist in nova. Adjust this command if this changes
@@ -15,6 +15,7 @@ class CustomAssetsCommand extends Command
     protected string $appResourcePath;
     protected Process $process;
     protected string $ds = DIRECTORY_SEPARATOR;
+    protected string $novaVersion = 'u';
 
     /**
      * The name and signature of the console command.
@@ -58,6 +59,13 @@ class CustomAssetsCommand extends Command
         return 0;
     }
 
+    protected function getNovaVersion()
+    {
+        $manifest = json_decode(file_get_contents(base_path('vendor/laravel/nova/composer.json')), true);
+        $version = $manifest['version'] ?? '4.x';
+        $this->novaVersion = $version;
+    }
+
     protected function productionRun()
     {
         $this->info('Run NPM production');
@@ -70,6 +78,7 @@ class CustomAssetsCommand extends Command
 
     protected function replaceComponents(string $path)
     {
+        $this->getNovaVersion();
         $files = glob($path.'/*');
         foreach ($files as $file) {
             if (in_array($file, ['..', '.'])) {
@@ -87,8 +96,27 @@ class CustomAssetsCommand extends Command
 
     protected function replaceComponent(string $file, string $target)
     {
+        $fileInfo = pathinfo($file);
+
+        $backupFile = rtrim($fileInfo['dirname'], '/\\').'/'.
+            str_replace($fileInfo['filename'], $fileInfo['filename'].'-nova-'.$this->novaVersion.'.'.$fileInfo['extension'], $fileInfo['filename']);
+
         $content = file_get_contents($file);
+
+        if (!file_exists($backupFile)) {
+            file_put_contents($backupFile, $content);
+        }
+
         file_put_contents($target, $content);
+    }
+
+    protected function strReplaceLast(string $search, string $replace, string $string): string
+    {
+        if (($pos = strrpos($string, $search)) !== false) {
+            $searchLength = strlen($search);
+            $string = substr_replace($string, $replace, $pos, $searchLength);
+        }
+        return $string;
     }
 
     /**
