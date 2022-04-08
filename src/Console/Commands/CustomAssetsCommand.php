@@ -98,14 +98,14 @@ class CustomAssetsCommand extends Command
     {
         $fileInfo = pathinfo($file);
 
-        $backupFile = rtrim($fileInfo['dirname'], '/\\').'/'.
-            str_replace($fileInfo['filename'], $fileInfo['filename'].'-nova-'.$this->novaVersion.'.'.$fileInfo['extension'], $fileInfo['filename']);
+//        $backupFile = rtrim($fileInfo['dirname'], '/\\').'/'.
+//            str_replace($fileInfo['filename'], $fileInfo['filename'].'-nova-'.$this->novaVersion.'.'.$fileInfo['extension'], $fileInfo['filename']);
 
         $content = file_get_contents($file);
 
-        if (!file_exists($backupFile)) {
-            file_put_contents($backupFile, $content);
-        }
+//        if (!file_exists($backupFile)) {
+//            file_put_contents($backupFile, $content);
+//        }
 
         file_put_contents($target, $content);
     }
