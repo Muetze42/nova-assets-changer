@@ -19,10 +19,10 @@
                     class="text-gray-900 hover:text-gray-500 active:text-gray-900 dark:text-gray-400 dark:hover:text-gray-300 dark:active:text-gray-500 h-12 rounded-lg flex items-center ml-2 focus:ring focus:ring-inset focus:outline-none px-4"
                     :aria-label="appName"
                 >
-                    <AppLogo />
+                    <AppLogo class="h-6" />
                 </Link>
 
-                <LicenseWarning />
+                <LicenseWarningComponent />
             </div>
 
             <div class="flex flex-1 px-4 sm:px-8 lg:px-12">
@@ -33,8 +33,8 @@
                 />
 
                 <div class="flex items-center pl-6 ml-auto">
+                    <ThemeDropdown />
                     <NotificationCenter />
-
                     <UserMenu class="hidden md:flex ml-2" />
                 </div>
             </div>
@@ -47,7 +47,7 @@
                     <div
                         @click="toggleMainMenu"
                         class="absolute inset-0 bg-gray-600 opacity-75"
-                    ></div>
+                    />
                 </div>
 
                 <div
@@ -81,14 +81,14 @@
                     <div class="px-2 border-b border-gray-100 dark:border-gray-700">
                         <Link
                             :href="$url('/')"
-                            class="h-12 px-2 rounded-lg flex items-center focus:ring focus:ring-inset focus:outline-none"
+                            class="h-12 px-2 rounded-lg flex items-center focus:ring focus:ring-inset focus:outline-none text-black"
                             :aria-label="appName"
                         >
-                            <AppLogo />
+                            <AppLogo class="h-6" />
                         </Link>
                     </div>
 
-                    <div class="overflow-x-scroll">
+                    <div class="overflow-x-auto">
                         <MainMenu class="mt-3 px-2" />
                     </div>
 
@@ -109,11 +109,16 @@
 
 <script>
 import { mapGetters, mapMutations } from 'vuex'
-import { Inertia } from '@inertiajs/inertia';
+import LicenseWarningComponent from '@/components/LicenseWarning'
+import {Inertia} from "@inertiajs/inertia";
 
 export default {
     methods: {
         ...mapMutations(['toggleMainMenu']),
+    },
+
+    components: {
+        LicenseWarningComponent,
     },
 
     watch: {
@@ -127,16 +132,16 @@ export default {
         },
     },
 
-    beforeUnmount() {
-        document.body.classList.remove('overflow-y-hidden')
-    },
-
     mounted() {
         Inertia.on('navigate', (event) => {
             if (this.mainMenuShown) {
                 this.toggleMainMenu()
             }
         });
+    },
+
+    beforeUnmount() {
+        document.body.classList.remove('overflow-y-hidden')
     },
 
     computed: {
