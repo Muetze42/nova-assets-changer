@@ -1,4 +1,4 @@
-[![StandWithUkraine](https://raw.githubusercontent.com/vshymanskyy/StandWithUkraine/main/badges/StandWithUkraine.svg)](https://github.com/vshymanskyy/StandWithUkraine/blob/main/docs/README.md)
+[![Stand With Ukraine](https://raw.githubusercontent.com/vshymanskyy/StandWithUkraine/main/banner2-direct.svg)](https://vshymanskyy.github.io/StandWithUkraine/)
 
 # Nova Assets Changer
 This package is for Nova 4 and swaps the resources from the `resources/Nova/Nova` folder with those in the `vendor/laravel/nova/resources/js` folder. 
