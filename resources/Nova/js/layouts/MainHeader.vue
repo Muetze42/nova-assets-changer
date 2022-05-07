@@ -1,4 +1,3 @@
-<!-- Close mobile menu after navigate -->
 <template>
     <div>
         <header
@@ -22,19 +21,19 @@
                     <AppLogo class="h-6" />
                 </Link>
 
-                <LicenseWarningComponent />
+                <LicenseWarning />
             </div>
 
             <div class="flex flex-1 px-4 sm:px-8 lg:px-12">
                 <GlobalSearch
                     class="relative z-10"
-                    v-if="supportsGlobalSearch"
+                    v-if="globalSearchEnabled"
                     dusk="global-search-component"
                 />
 
                 <div class="flex items-center pl-6 ml-auto">
                     <ThemeDropdown />
-                    <NotificationCenter />
+                    <NotificationCenter v-if="notificationCenterEnabled" />
                     <UserMenu class="hidden md:flex ml-2" />
                 </div>
             </div>
@@ -109,17 +108,11 @@
 
 <script>
 import { mapGetters, mapMutations } from 'vuex'
-import LicenseWarningComponent from '@/components/LicenseWarning'
-import {Inertia} from "@inertiajs/inertia";
+import LicenseWarning from '@/components/LicenseWarning'
 
 export default {
-    methods: {
-        ...mapMutations(['toggleMainMenu']),
-    },
-
-    components: {
-        LicenseWarningComponent,
-    },
+    methods: mapMutations(['toggleMainMenu']),
+    components: { LicenseWarning },
 
     watch: {
         mainMenuShown(newValue) {
@@ -132,6 +125,10 @@ export default {
         },
     },
 
+    beforeUnmount() {
+        document.body.classList.remove('overflow-y-hidden')
+    },
+
     mounted() {
         Inertia.on('navigate', (event) => {
             if (this.mainMenuShown) {
@@ -140,15 +137,15 @@ export default {
         });
     },
 
-    beforeUnmount() {
-        document.body.classList.remove('overflow-y-hidden')
-    },
-
     computed: {
         ...mapGetters(['mainMenuShown']),
 
-        supportsGlobalSearch() {
-            return Nova.config('hasGloballySearchableResources')
+        globalSearchEnabled() {
+            return Nova.config('globalSearchEnabled')
+        },
+
+        notificationCenterEnabled() {
+            return Nova.config('notificationCenterEnabled')
         },
 
         appName() {
