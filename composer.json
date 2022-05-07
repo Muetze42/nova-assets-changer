@@ -1,18 +1,30 @@
 {
     "name": "norman-huth/nova-assets-changer",
+    "description": "Change Nova resources",
+    "homepage": "https://github.com/Muetze42/nova-assets-changer",
+    "support": {
+        "issues": "https://github.com/Muetze42/nova-assets-changer/issues",
+        "source": "https://github.com/Muetze42/nova-assets-changer",
+        "docs": "https://github.com/Muetze42/nova-assets-changer#readme"
+    },
     "license": "MIT",
+    "authors": [
+        {
+            "name": "Norman Huth",
+            "homepage": "https://huth.it"
+        }
+    ],
+    "keywords": [
+        "nova",
+        "laravel",
+        "nova-4",
+        "larave-nova"
+    ],
     "autoload": {
         "psr-4": {
             "NormanHuth\\NovaAssetsChanger\\": "src/"
         }
     },
-    "authors": [
-        {
-            "name": "Norman Huth",
-            "email": "norman@huth.it",
-            "homepage": "https://huth.it"
-        }
-    ],
     "require": {
         "laravel/nova": "^4.3.0"
     },

@@ -1,3 +1,5 @@
+[![Stand With Ukraine](https://raw.githubusercontent.com/vshymanskyy/StandWithUkraine/main/banner2-direct.svg)](https://vshymanskyy.github.io/StandWithUkraine/)
+
 # Nova Assets Changer
 This package is for Nova 4 and swaps the resources from the `resources/Nova/Nova` folder with those in the `vendor/laravel/nova/resources/js` folder. 
 Then the assets are recompiled and published with the Force option.
@@ -33,13 +35,5 @@ ___
 ## Examples
 I make not a release for every example. For all example resources take a look in the `resources` folder of the GitHub repository
 
-* [Remove preview from index dropdown](resources/Nova/js/components/Dropdowns/InlineActionDropdown.vue)
-* [Remove timezone from DateTime field - detail view](resources/Nova/js/fields/Detail/DateTimeField.vue)
-* [Remove timezone from DateTime field - index view](resources/Nova/js/fields/Index/DateTimeField.vue)
-* [Add target="_blank" to footer link](resources/Nova/js/layouts/Footer.vue)
-* [Close mobile menu after navigate](resources/Nova/js/layouts/MainHeader.vue)
-* [Translate Email Address on login page](resources/Nova/js/pages/Login.vue)
-* [Don't go to the detail view when clicking on a row in the index view](resources/Nova/js/components/ResourceTableRow.vue)
-
-## Update info
-Since version 1.0.3, this package creates a backup file. Please reinstall Nova before use.
+---
+[![More Laravel Nova Packages](https://raw.githubusercontent.com/Muetze42/asset-repo/main/svg/more-laravel-nova-packages.svg)](https://huth.it/nova-packages)
