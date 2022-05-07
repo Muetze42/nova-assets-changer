@@ -18,7 +18,7 @@
         "nova",
         "laravel",
         "nova-4",
-        "larave-nova"
+        "laravel-nova"
     ],
     "autoload": {
         "psr-4": {
