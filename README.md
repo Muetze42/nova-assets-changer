@@ -6,6 +6,9 @@ Then the assets are recompiled and published with the Force option.
 
 Attention. The original vendor files will be overwritten.
 
+## Overflow Fix Nova 4.5.2
+[resources/Nova/js/layouts/AppLayout.vue](resources/Nova/js/layouts/AppLayout.vue)
+
 ## Install
 ```
 composer require norman-huth/nova-assets-changer
