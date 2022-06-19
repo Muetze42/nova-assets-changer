@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\Log;
 
 class Process
 {
-    protected bool $commandLogging = true;
+    protected bool $commandLogging = false;
     protected bool $outputLogging = false;
     protected ?array $output;
     protected ?array $errorOutput;
@@ -76,7 +76,7 @@ class Process
      *
      * @param object|array|string $output
      */
-    protected function outputLogging(object|array|string $output)
+    protected function outputLogging(object|array|string $output): void
     {
         if ($this->outputLogging) {
             $this->infoLog($output);
@@ -88,7 +88,7 @@ class Process
      *
      * @param object|array|string $command
      */
-    protected function commandLogging(object|array|string $command)
+    protected function commandLogging(object|array|string $command): void
     {
         if ($this->commandLogging) {
             $this->infoLog('Run command `'.$command.'`:');
@@ -98,7 +98,7 @@ class Process
     /**
      * @param object|array|string $content
      */
-    protected function infoLog(object|array|string $content)
+    protected function infoLog(object|array|string $content): void
     {
         if (is_array($content)) {
             $content = implode("\n", $content);
@@ -109,37 +109,5 @@ class Process
         }
 
         Log::info($content);
-    }
-
-    /**
-     * Disable the output logging.
-     */
-    public function disableOutputLogging()
-    {
-        $this->outputLogging = false;
-    }
-
-    /**
-     * Enable the output logging.
-     */
-    public function enableOutputLogging()
-    {
-        $this->outputLogging = true;
-    }
-
-    /**
-     * Disable the command logging.
-     */
-    public function disableCommandLogging()
-    {
-        $this->commandLogging = false;
-    }
-
-    /**
-     * Enable the command logging.
-     */
-    public function enableCommandLogging()
-    {
-        $this->commandLogging = true;
     }
 }

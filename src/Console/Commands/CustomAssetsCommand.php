@@ -2,27 +2,33 @@
 
 namespace NormanHuth\NovaAssetsChanger\Console\Commands;
 
-use Illuminate\Console\Command;
 use NormanHuth\NovaAssetsChanger\Helpers\Process;
 
-/**
- * Todo: `nova:update` currently not exist in nova. Adjust this command if this changes
- */
 class CustomAssetsCommand extends Command
 {
-    protected string $novaPath;
-    protected string $novaResourcesPath;
-    protected string $appResourcePath;
+    /**
+     * @var string
+     */
+    protected string $novaPath = 'vendor/laravel/nova';
+    /**
+     * @var Process
+     */
     protected Process $process;
-    protected string $ds = DIRECTORY_SEPARATOR;
-    protected string $novaVersion = 'u';
+    /**
+     * @var string
+     */
+    protected string $composerCommand = 'composer';
+    /**
+     * @var string
+     */
+    protected string $npmCommand = 'npm';
 
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'nova:custom-assets {--without-npm-install}';
+    protected $signature = 'nova:custom-assets';
 
     /**
      * The console command description.
@@ -38,106 +44,113 @@ class CustomAssetsCommand extends Command
      */
     public function handle(): int
     {
-        $npmInstall = !$this->option('without-npm-install');
-        $this->novaPath = base_path('vendor'.$this->ds.'laravel'.$this->ds.'nova');
-        $this->novaResourcesPath = $this->novaPath.$this->ds.'resources';
-        $this->appResourcePath = resource_path('Nova'.$this->ds.'Nova');
         $this->process = new Process;
+        $this->novaPath = base_path($this->novaPath);
 
+        $this->reinstallNova();
+        $this->replaceComponents();
         $this->webpack();
-        if ($npmInstall) {
-            $this->installNPM();
-        }
-        $this->replaceComponents($this->appResourcePath);
-        $this->productionRun();
+        $this->npmInstall();
+        $this->npmProduction();
+        $this->publishNovaAssets();
+
+        return 0;
+    }
+
+    /**
+     * @return void
+     */
+    protected function publishNovaAssets(): void
+    {
         $this->info('Publish Nova assets');
         $this->call('vendor:publish', [
             '--tag'   => 'nova-assets',
             '--force' => true,
         ]);
-
-        return 0;
     }
 
-    protected function getNovaVersion()
-    {
-        $manifest = json_decode(file_get_contents(base_path('vendor/laravel/nova/composer.json')), true);
-        $version = $manifest['version'] ?? '4.x';
-        $this->novaVersion = $version;
-    }
-
-    protected function productionRun()
+    /**
+     * @return void
+     */
+    protected function npmProduction(): void
     {
         $this->info('Run NPM production');
-        $command = 'cd '.$this->novaPath.' && npm run production';
+        $command = 'cd '.$this->novaPath.' && '.$this->npmCommand.' run production';
         $this->process->runCommand($command);
         foreach ($this->process->getOutput() as $output) {
             $this->line($output);
         }
     }
 
-    protected function replaceComponents(string $path)
+    /**
+     * @return void
+     */
+    protected function reinstallNova(): void
     {
-        $this->getNovaVersion();
-        $files = glob($path.'/*');
+        $this->info('Reinstall laravel/nova');
+        $this->process->runCommand($this->composerCommand.' reinstall laravel/nova');
+        foreach ($this->process->getOutput() as $output) {
+            $this->line($output);
+        }
+    }
+
+    /**
+     * @param string $path
+     * @return void
+     */
+    protected function replaceComponents(string $path = 'Nova'): void
+    {
+        $files = $this->storage->files($path);
         foreach ($files as $file) {
-            if (in_array($file, ['..', '.'])) {
+            $base = explode('/', $file, 2)[1];
+            $this->info('Processing '.$base);
+            if ($this->novaStorage->missing('resources/'.$base)) {
+                $this->error('Skip file. `'.$base.'` not found in the Nova installation');
                 continue;
             }
-            if (str_ends_with($file, '.vue')) {
-                $target = $this->novaResourcesPath.str_replace($this->appResourcePath, '', $file);
-                $this->line('Replace file: '.$file);
-                $this->replaceComponent($file, $target);
-            } elseif (is_dir($file)) {
-                $this->replaceComponents($file);
+            $customContent = $this->storage->get($file);
+            $novaContent = $this->novaStorage->get('resources/'.$base);
+            if ($this->storage->missing('Backup/'.$base)) {
+                $this->storage->put('Backup/'.$base, $novaContent);
+            } else {
+                $backupContent = $this->storage->get('Backup/'.$base);
+                if (trim($backupContent) != trim($novaContent)) {
+                    if (!$this->confirm('The `'.$base.'` file seems to have changed. Do you wish to continue and renew the backup file?')) {
+                        die('Abort');
+                    } else {
+                        $this->storage->put('Backup/'.$base, $novaContent);
+                    }
+                }
+
+                $this->novaStorage->put('resources/'.$base, $customContent);
             }
         }
-    }
-
-    protected function replaceComponent(string $file, string $target)
-    {
-        $fileInfo = pathinfo($file);
-
-//        $backupFile = rtrim($fileInfo['dirname'], '/\\').'/'.
-//            str_replace($fileInfo['filename'], $fileInfo['filename'].'-nova-'.$this->novaVersion.'.'.$fileInfo['extension'], $fileInfo['filename']);
-
-        $content = file_get_contents($file);
-
-//        if (!file_exists($backupFile)) {
-//            file_put_contents($backupFile, $content);
-//        }
-
-        file_put_contents($target, $content);
-    }
-
-    protected function strReplaceLast(string $search, string $replace, string $string): string
-    {
-        if (($pos = strrpos($string, $search)) !== false) {
-            $searchLength = strlen($search);
-            $string = substr_replace($string, $replace, $pos, $searchLength);
+        $directories = $this->storage->directories($path);
+        foreach ($directories as $directory) {
+            $this->replaceComponents($directory);
         }
-        return $string;
     }
 
     /**
-     * Install NPM packages
+     * @return void
      */
-    protected function installNPM()
+    protected function npmInstall(): void
     {
         $this->info('Run NPM install');
-        $command = 'cd '.$this->novaPath.' && npm i';
-        $this->process->runCommand($command);
+        $this->process->runCommand('cd '.$this->novaPath.' && '.$this->npmCommand.' i');
         foreach ($this->process->getOutput() as $output) {
             $this->line($output);
         }
     }
 
     /**
-     * Create or overwrite Nova webpack.mix.js
+     * @return void
      */
-    protected function webpack()
+    protected function webpack(): void
     {
-        $content = file_get_contents($this->novaPath.'/webpack.mix.js.dist');
-        file_put_contents($this->novaPath.'/webpack.mix.js', $content);
+        if ($this->novaStorage->exists('webpack.mix.js.dist')) {
+            $this->info('Create webpack.mix.js');
+            $this->novaStorage->put('webpack.mix.js', $this->novaStorage->get('webpack.mix.js.dist'));
+        }
     }
 }

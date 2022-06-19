@@ -4,6 +4,7 @@ namespace NormanHuth\NovaAssetsChanger;
 
 use Illuminate\Support\ServiceProvider;
 use NormanHuth\NovaAssetsChanger\Console\Commands\CustomAssetsCommand;
+use NormanHuth\NovaAssetsChanger\Console\Commands\PublishCommand;
 
 class PackageServiceProvider extends ServiceProvider
 {
@@ -20,6 +21,7 @@ class PackageServiceProvider extends ServiceProvider
         if ($this->app->runningInConsole()) {
             $this->commands([
                 CustomAssetsCommand::class,
+                PublishCommand::class,
             ]);
         }
     }

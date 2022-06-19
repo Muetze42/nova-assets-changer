@@ -1,3 +1,4 @@
+<!-- remove preview -->
 <template>
     <div v-if="hasDropdownItems">
         <Dropdown v-if="actions.length > 0 || resource.authorizedToReplicate || (currentUser.canImpersonate && resource.authorizedToImpersonate)">
