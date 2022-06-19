@@ -6,7 +6,7 @@ This package is for Nova 4 and swaps the resources from the `resources/Nova/Nova
 command.  
 Then the assets are recompiled and published with the Force option.
 
-This package creates a backup of each file and prepare for changes
+This package creates a backup of each file and checks for changes
 
 Attention. The original vendor files will be overwritten.
 
