@@ -41,12 +41,6 @@ php artisan nova:custom-assets
 composer reinstall laravel/nova
 ```
 
-If you want to skip NPM install use this command:
-
-```
-php artisan nova:custom-assets --without-npm-install
-```
-
 ## Notice
 
 After a Nova update, you need to check your resource files to see if they are still compatible.

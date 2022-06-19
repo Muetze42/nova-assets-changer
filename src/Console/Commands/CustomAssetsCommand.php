@@ -8,13 +8,15 @@ class CustomAssetsCommand extends Command
 {
     protected string $novaPath = 'vendor/laravel/nova';
     protected Process $process;
+    protected string $composerCommand = 'composer';
+    protected string $npmCommand = 'npm';
 
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'nova:custom-assets {--without-npm-install}';
+    protected $signature = 'nova:custom-assets';
 
     /**
      * The console command description.
@@ -30,16 +32,13 @@ class CustomAssetsCommand extends Command
      */
     public function handle(): int
     {
-        $npmInstall = !$this->option('without-npm-install');
         $this->process = new Process;
         $this->novaPath = base_path($this->novaPath);
 
         $this->reinstallNova();
         $this->replaceComponents();
         $this->webpack();
-        if ($npmInstall) {
-            $this->npmInstall();
-        }
+        $this->npmInstall();
         $this->npmProduction();
         $this->publishNovaAssets();
 
@@ -58,7 +57,7 @@ class CustomAssetsCommand extends Command
     protected function npmProduction()
     {
         $this->info('Run NPM production');
-        $command = 'cd '.$this->novaPath.' && npm run production';
+        $command = 'cd '.$this->novaPath.' && '.$this->npmCommand.' run production';
         $this->process->runCommand($command);
         foreach ($this->process->getOutput() as $output) {
             $this->line($output);
@@ -68,7 +67,7 @@ class CustomAssetsCommand extends Command
     protected function reinstallNova()
     {
         $this->info('Reinstall laravel/nova');
-        $this->process->runCommand('composer reinstall laravel/nova');
+        $this->process->runCommand($this->composerCommand.' reinstall laravel/nova');
         foreach ($this->process->getOutput() as $output) {
             $this->line($output);
         }
@@ -110,7 +109,7 @@ class CustomAssetsCommand extends Command
     protected function npmInstall()
     {
         $this->info('Run NPM install');
-        $this->process->runCommand('cd '.$this->novaPath.' && npm i');
+        $this->process->runCommand('cd '.$this->novaPath.' && '.$this->npmCommand.' i');
         foreach ($this->process->getOutput() as $output) {
             $this->line($output);
         }
