@@ -1,3 +1,4 @@
+<!-- Auto close mobile menu after navigate -->
 <template>
     <div>
         <header

@@ -2,7 +2,7 @@
 
 # Nova Assets Changer
 
-This package is for Nova 4 and swaps the resources from the `resources/Nova/Nova` folder with those in the `vendor/laravel/nova/resources/js` folder.
+This package is for Nova 4 and swaps the resources from the `resources/Nova/Nova` folder with those in the `vendor/laravel/nova/resources/js` folder or use the `php artisan custom-assets:publish` command.  
 Then the assets are recompiled and published with the Force option.
 
 This package creates a backup of each file and prepare for changes
@@ -20,6 +20,12 @@ Tip: You can replace `@php artisan nova:publish` with `@php artisan nova:custom-
 ```
 composer require norman-huth/nova-assets-changer --dev
 ```
+
+### Publish Nova Assets
+```
+php artisan custom-assets:publish
+```
+
 
 ### Optional
 

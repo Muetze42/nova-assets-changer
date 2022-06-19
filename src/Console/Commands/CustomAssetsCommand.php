@@ -6,9 +6,21 @@ use NormanHuth\NovaAssetsChanger\Helpers\Process;
 
 class CustomAssetsCommand extends Command
 {
+    /**
+     * @var string
+     */
     protected string $novaPath = 'vendor/laravel/nova';
+    /**
+     * @var Process
+     */
     protected Process $process;
+    /**
+     * @var string
+     */
     protected string $composerCommand = 'composer';
+    /**
+     * @var string
+     */
     protected string $npmCommand = 'npm';
 
     /**
@@ -45,7 +57,10 @@ class CustomAssetsCommand extends Command
         return 0;
     }
 
-    protected function publishNovaAssets()
+    /**
+     * @return void
+     */
+    protected function publishNovaAssets(): void
     {
         $this->info('Publish Nova assets');
         $this->call('vendor:publish', [
@@ -54,7 +69,10 @@ class CustomAssetsCommand extends Command
         ]);
     }
 
-    protected function npmProduction()
+    /**
+     * @return void
+     */
+    protected function npmProduction(): void
     {
         $this->info('Run NPM production');
         $command = 'cd '.$this->novaPath.' && '.$this->npmCommand.' run production';
@@ -64,7 +82,10 @@ class CustomAssetsCommand extends Command
         }
     }
 
-    protected function reinstallNova()
+    /**
+     * @return void
+     */
+    protected function reinstallNova(): void
     {
         $this->info('Reinstall laravel/nova');
         $this->process->runCommand($this->composerCommand.' reinstall laravel/nova');
@@ -73,7 +94,11 @@ class CustomAssetsCommand extends Command
         }
     }
 
-    protected function replaceComponents($path = 'Nova')
+    /**
+     * @param string $path
+     * @return void
+     */
+    protected function replaceComponents(string $path = 'Nova'): void
     {
         $files = $this->storage->files($path);
         foreach ($files as $file) {
@@ -106,7 +131,10 @@ class CustomAssetsCommand extends Command
         }
     }
 
-    protected function npmInstall()
+    /**
+     * @return void
+     */
+    protected function npmInstall(): void
     {
         $this->info('Run NPM install');
         $this->process->runCommand('cd '.$this->novaPath.' && '.$this->npmCommand.' i');
@@ -115,7 +143,10 @@ class CustomAssetsCommand extends Command
         }
     }
 
-    protected function webpack()
+    /**
+     * @return void
+     */
+    protected function webpack(): void
     {
         if ($this->novaStorage->exists('webpack.mix.js.dist')) {
             $this->info('Create webpack.mix.js');

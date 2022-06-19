@@ -1,3 +1,4 @@
+<!-- resource rows not clickable -->
 <template>
     <tr
         :data-pivot-id="resource['id'].pivotValue"
