@@ -73,8 +73,6 @@ class CustomAssetsCommand extends Command
         $this->novaPath = base_path($this->novaPath);
 
         $this->reinstallNova();
-
-        return 0;
         $this->replaceComponents();
         $this->webpack();
         $this->npmInstall();
