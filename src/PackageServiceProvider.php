@@ -5,6 +5,7 @@ namespace NormanHuth\NovaAssetsChanger;
 use Illuminate\Support\ServiceProvider;
 use NormanHuth\NovaAssetsChanger\Console\Commands\CustomAssetsCommand;
 use NormanHuth\NovaAssetsChanger\Console\Commands\PublishCommand;
+use NormanHuth\NovaAssetsChanger\Console\Commands\PublishFieldCommand;
 
 class PackageServiceProvider extends ServiceProvider
 {
@@ -13,7 +14,7 @@ class PackageServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    public function boot()
+    public function boot(): void
     {
         $this->publishes([
             __DIR__.'/../resources' => resource_path('Nova'),
@@ -22,6 +23,7 @@ class PackageServiceProvider extends ServiceProvider
             $this->commands([
                 CustomAssetsCommand::class,
                 PublishCommand::class,
+                PublishFieldCommand::class,
             ]);
         }
     }

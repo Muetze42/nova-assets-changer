@@ -42,15 +42,6 @@ class PublishCommand extends Command
     /**
      * @return void
      */
-    protected function break(): void
-    {
-        $this->newLine(3);
-        $this->comment('--------------------');
-    }
-
-    /**
-     * @return void
-     */
     protected function selectBaseDirectory(): void
     {
         $i = 0;
