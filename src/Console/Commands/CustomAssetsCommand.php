@@ -7,21 +7,46 @@ use NormanHuth\NovaAssetsChanger\Helpers\Process;
 class CustomAssetsCommand extends Command
 {
     /**
-     * @var string
-     */
-    protected string $novaPath = 'vendor/laravel/nova';
-    /**
-     * @var Process
-     */
-    protected Process $process;
-    /**
+     * CLI Composer Command
+     *
      * @var string
      */
     protected string $composerCommand = 'composer';
+
     /**
+     * CLI NPM Command
+     *
      * @var string
      */
     protected string $npmCommand = 'npm';
+
+    /**
+     * `str_contains` Check 1 for Nova install
+     *
+     * @var string
+     */
+    protected string $installStrContainsCheck1 = 'Installing laravel/nova';
+
+    /**
+     * `str_contains` Check 2 for Nova install
+     *
+     * @var string
+     */
+    protected string $installStrContainsCheck2 = 'Installing laravel/nova';
+
+    /**
+     * Nova Path
+     *
+     * @var string
+     */
+    protected string $novaPath = 'vendor/laravel/nova';
+
+    /**
+     * Process output class
+     *
+     * @var Process
+     */
+    protected Process $process;
 
     /**
      * The name and signature of the console command.
@@ -48,6 +73,8 @@ class CustomAssetsCommand extends Command
         $this->novaPath = base_path($this->novaPath);
 
         $this->reinstallNova();
+
+        return 0;
         $this->replaceComponents();
         $this->webpack();
         $this->npmInstall();
@@ -88,9 +115,17 @@ class CustomAssetsCommand extends Command
     protected function reinstallNova(): void
     {
         $this->info('Reinstall laravel/nova');
+        $succes = false;
         $this->process->runCommand($this->composerCommand.' reinstall laravel/nova');
         foreach ($this->process->getOutput() as $output) {
+            if (str_contains($output, $this->installStrContainsCheck1) && str_contains($output, $this->installStrContainsCheck2)) {
+                $succes = true;
+            }
             $this->line($output);
+        }
+        if (!$succes) {
+            $this->error('It could’t detect a new installation of Nova.');
+            die();
         }
     }
 
@@ -116,7 +151,8 @@ class CustomAssetsCommand extends Command
                 $backupContent = $this->storage->get('Backup/'.$base);
                 if (trim($backupContent) != trim($novaContent)) {
                     if (!$this->confirm('The `'.$base.'` file seems to have changed. Do you wish to continue and renew the backup file?')) {
-                        die('Abort');
+                        $this->error('Abort');
+                        die();
                     } else {
                         $this->storage->put('Backup/'.$base, $novaContent);
                     }

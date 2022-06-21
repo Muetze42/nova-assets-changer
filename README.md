@@ -48,11 +48,41 @@ php artisan vendor:publish --provider="NormanHuth\NovaAssetsChanger\PackageServi
 
 After a Nova update, you need to check your resource files to see if they are still compatible.
 
-___
-
 ## Examples
 
 I make not a release for every example. For all example resources take a look in the `resources` folder of the GitHub repository
 
+## Other Composer Or NPM Command
+Create a command:
+`php artisan make:command CustomAssetsCommand`
+
+with followingen content:
+```php
+<?php
+
+namespace App\Console\Commands;
+
+use NormanHuth\NovaAssetsChanger\Console\Commands\CustomAssetsCommand as Command;
+
+class CustomAssetsCommand extends Command
+{
+    /**
+     * CLI Composer Command
+     *
+     * @var string
+     */
+    protected string $composerCommand = 'composer';
+
+    /**
+     * CLI NPM Command
+     *
+     * @var string
+     */
+    protected string $npmCommand = 'npm';
+}
+
+```
+
 ---
 [![More Laravel Nova Packages](https://raw.githubusercontent.com/Muetze42/asset-repo/main/svg/more-laravel-nova-packages.svg)](https://huth.it/nova-packages)
+
