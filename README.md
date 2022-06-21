@@ -38,6 +38,12 @@ php artisan nova:custom-assets
 php artisan custom-assets:publish
 ```
 
+#### Publish Nova Field Assets Via Command (experimental)
+
+```
+php artisan custom-assets:publish:field
+```
+
 Publish example resources
 
 ```

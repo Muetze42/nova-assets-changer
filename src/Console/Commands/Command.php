@@ -8,8 +8,33 @@ use Illuminate\Support\Facades\Storage;
 
 class Command extends BaseCommand
 {
+    /**
+     * Resource Storage
+     *
+     * @var Filesystem
+     */
     protected Filesystem $storage;
+
+    /**
+     * Nova Storage
+     *
+     * @var Filesystem
+     */
     protected Filesystem $novaStorage;
+
+    /**
+     * Nova Vendor Path
+     *
+     * @var string
+     */
+    protected string $novaVendorPath = 'vendor/laravel/nova';
+
+    /**
+     * Resource Path
+     *
+     * @var string
+     */
+    protected string $resourcePath = 'Nova';
 
     /**
      * Create a new console command instance.
@@ -21,15 +46,24 @@ class Command extends BaseCommand
     {
         $this->storage = Storage::build([
             'driver' => 'local',
-            'root'   => resource_path('Nova'),
+            'root'   => resource_path($this->resourcePath),
             'throw'  => false,
         ]);
         $this->novaStorage = Storage::build([
             'driver' => 'local',
-            'root'   => base_path('vendor/laravel/nova'),
+            'root'   => base_path($this->novaVendorPath),
             'throw'  => false,
         ]);
 
         parent::__construct();
+    }
+
+    /**
+     * @return void
+     */
+    protected function break(): void
+    {
+        $this->newLine(3);
+        $this->comment('--------------------');
     }
 }
