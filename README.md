@@ -14,7 +14,7 @@ Attention. The original vendor files will be overwritten.
 
 You must run the `php artisan nova:custom-assets` after every composer update!
 
-Tip: You can replace `@php artisan nova:publish` with `@php artisan nova:custom-assets` in Your `composer.json`
+Tip: You can replace `@php artisan nova:publish` with `@php artisan custom-assets:after-composer-update` in Your `composer.json`
 
 ## Install
 
@@ -31,6 +31,12 @@ php artisan nova:custom-assets
 ```
 
 ### Optional
+
+#### Run Command Only If A Nova Update Is Detected (Or The Package Has No Version Saved)
+
+```
+php aritsan custom-assets:after-composer-update
+```
 
 #### Publish Nova Assets Via Command
 
@@ -59,10 +65,12 @@ After a Nova update, you need to check your resource files to see if they are st
 I make not a release for every example. For all example resources take a look in the `resources` folder of the GitHub repository
 
 ## Other Composer Or NPM Command
+
 Create a command:
 `php artisan make:command CustomAssetsCommand`
 
 with followingen content:
+
 ```php
 <?php
 
