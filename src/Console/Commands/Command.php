@@ -37,6 +37,14 @@ class Command extends BaseCommand
     protected string $resourcePath = 'Nova';
 
     /**
+     * File for saving package data
+     *
+     * @var string
+     */
+    protected string $memoryFile = 'asset-changer.json';
+    protected string $lastUseNovaVersionKey = 'last-used-nova-version';
+
+    /**
      * Create a new console command instance.
      * Create 2 new On-Demand Disks
      *

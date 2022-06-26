@@ -2,6 +2,7 @@
 
 namespace NormanHuth\NovaAssetsChanger\Console\Commands;
 
+use Laravel\Nova\Nova;
 use NormanHuth\NovaAssetsChanger\Helpers\Process;
 
 class CustomAssetsCommand extends Command
@@ -78,8 +79,17 @@ class CustomAssetsCommand extends Command
         $this->npmInstall();
         $this->npmProduction();
         $this->publishNovaAssets();
+        $this->saveCurrentNovaVersion();
 
         return 0;
+    }
+
+    /**
+     * @return void
+     */
+    protected function saveCurrentNovaVersion(): void
+    {
+        $this->storage->put($this->memoryFile, json_encode([$this->lastUseNovaVersionKey => Nova::version()]));
     }
 
     /**
@@ -113,15 +123,15 @@ class CustomAssetsCommand extends Command
     protected function reinstallNova(): void
     {
         $this->info('Reinstall laravel/nova');
-        $succes = false;
+        $success = false;
         $this->process->runCommand($this->composerCommand.' reinstall laravel/nova');
         foreach ($this->process->getOutput() as $output) {
             if (str_contains($output, $this->installStrContainsCheck1) && str_contains($output, $this->installStrContainsCheck2)) {
-                $succes = true;
+                $success = true;
             }
             $this->line($output);
         }
-        if (!$succes) {
+        if (!$success) {
             $this->error('It could’t detect a new installation of Nova.');
             die();
         }
