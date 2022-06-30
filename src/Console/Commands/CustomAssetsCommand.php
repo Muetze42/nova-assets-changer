@@ -22,6 +22,13 @@ class CustomAssetsCommand extends Command
     protected string $npmCommand = 'npm';
 
     /**
+     * Disable NPM Notifications
+     *
+     * @var bool
+     */
+    protected bool $disableNPMNotifications = true;
+
+    /**
      * `str_contains` Check 1 for Nova install
      *
      * @var string
@@ -192,9 +199,13 @@ class CustomAssetsCommand extends Command
      */
     protected function webpack(): void
     {
-        if ($this->novaStorage->exists('webpack.mix.js.dist')) {
+        if ($this->novaStorage->exists('webpack.mix.js.dist') && $this->novaStorage->missing('webpack.mix.js')) {
             $this->info('Create webpack.mix.js');
-            $this->novaStorage->put('webpack.mix.js', $this->novaStorage->get('webpack.mix.js.dist'));
+            $content = $this->novaStorage->get('webpack.mix.js.dist');
+            if ($this->disableNPMNotifications && !str_contains($content, '.disableNotifications()')) {
+                $content = str_replace('.version()', ".version()\n  .disableNotifications()", $content);
+            }
+            $this->novaStorage->put('webpack.mix.js', $content);
         }
     }
 }
