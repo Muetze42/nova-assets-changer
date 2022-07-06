@@ -42,7 +42,7 @@ class AfterComposerUpdateCommand extends Command
             return 0;
         }
 
-        $this->alert('No Nova Update detected. Skip running `nova:custom-assets` command');
+        $this->alert('No Nova Update detected. Don’t run `nova:custom-assets` command');
         return 0;
     }
 }
