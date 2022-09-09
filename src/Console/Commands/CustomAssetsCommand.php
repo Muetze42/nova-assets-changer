@@ -151,6 +151,16 @@ class CustomAssetsCommand extends Command
      */
     protected function npmProduction(): void
     {
+        $fontsCSS = $this->novaStorage->get('resources/css/fonts.css');
+        $novaCSS = $this->novaStorage->get('resources/css/nova.css');
+        $appCSS = $this->novaStorage->get('resources/css/app.css');
+        $replace = [
+            '@import \'nova\';' => $novaCSS,
+            '@import \'fonts\';' => $fontsCSS,
+        ];
+        $appCSS = str_replace(array_keys($replace), array_values($replace), $appCSS);
+        $this->novaStorage->put('resources/css/app.css', $appCSS);
+
         $this->info('Run NPM production');
         $command = 'cd '.$this->novaPath.' && '.$this->npmCommand.' run production';
         $this->process->runCommand($command);
