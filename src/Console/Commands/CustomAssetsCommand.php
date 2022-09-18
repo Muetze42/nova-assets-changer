@@ -157,6 +157,7 @@ class CustomAssetsCommand extends Command
         $replace = [
             '@import \'nova\';' => $novaCSS,
             '@import \'fonts\';' => $fontsCSS,
+            '@import \'tailwindcss/components\';' => '@import \'tailwindcss/components\';' . PHP_EOL . '@import \'tailwindcss/utilities\';',
         ];
         $appCSS = str_replace(array_keys($replace), array_values($replace), $appCSS);
         $this->novaStorage->put('resources/css/app.css', $appCSS);
