@@ -116,7 +116,7 @@ class CustomAssetsCommand extends Command
                 $content = $this->novaStorage->get('resources/js/app.js');
                 if (!str_contains($content, 'Nova.'.$basename)) {
                     $content = str_replace("'Nova.Login': require('@/pages/Login').default,",
-                        "'Nova.Login': require('@/pages/Login').default,\n      'Nova.Register': require('@/pages/".$basename."').default,",
+                        "'Nova.Login': require('@/pages/Login').default,\n      'Nova.".basename($basename,$info['extension'])."': require('@/pages/".$basename."').default,",
                         $content);
 
                     $this->novaStorage->put('resources/js/app.js', $content);
