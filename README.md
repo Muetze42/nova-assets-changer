@@ -97,6 +97,10 @@ class CustomAssetsCommand extends Command
 
 ```
 
+## Register new pages
+
+Example: [Register Page](/docs/register-page.md)
+
 ---
 [![More Laravel Nova Packages](https://raw.githubusercontent.com/Muetze42/asset-repo/main/svg/more-laravel-nova-packages.svg)](https://huth.it/nova-packages)
 
