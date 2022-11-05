@@ -104,6 +104,7 @@ class CustomAssetsCommand extends Command
         foreach ($files as $file) {
             $info = pathinfo($file);
             $basename = basename($file);
+            $basenameWoExt = basename($basename,'.' . $info['extension']);
             if ($this->novaStorage->exists('resources/js/pages/'.$basename)) {
                 $this->error(__('Skip `:file`. File already exist in Nova', ['file' => $file]));
                 continue;
@@ -116,7 +117,7 @@ class CustomAssetsCommand extends Command
                 $content = $this->novaStorage->get('resources/js/app.js');
                 if (!str_contains($content, 'Nova.'.$basename)) {
                     $content = str_replace("'Nova.Login': require('@/pages/Login').default,",
-                        "'Nova.Login': require('@/pages/Login').default,\n      'Nova.Register': require('@/pages/".$basename."').default,",
+                        "'Nova.Login': require('@/pages/Login').default,\n      'Nova.".$basenameWoExt."': require('@/pages/".$basenameWoExt."').default,",
                         $content);
 
                     $this->novaStorage->put('resources/js/app.js', $content);
