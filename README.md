@@ -2,7 +2,8 @@
 
 # Nova Assets Changer
 
-This package is for Nova 4 and swaps the resources from the `resources/Nova/Nova` folder with those in the `vendor/laravel/nova/resources/js` folder or use the `php artisan custom-assets:publish`
+This package is for Nova 4 and swaps the resources from the `resources/Nova/Nova` folder with those in
+the `vendor/laravel/nova/resources/js` folder or use the `php artisan custom-assets:publish`
 command.  
 Then the assets are recompiled and published with the Force option.
 
@@ -14,7 +15,8 @@ Attention. The original vendor files will be overwritten.
 
 You must run the `php artisan nova:custom-assets` after every composer update!
 
-Tip: You can replace `@php artisan nova:publish` with `@php artisan custom-assets:after-composer-update` in Your `composer.json`
+Tip: You can replace `@php artisan nova:publish` with `@php artisan custom-assets:after-composer-update` in
+Your `composer.json`
 
 ## Install
 
@@ -62,7 +64,8 @@ After a Nova update, you need to check your resource files to see if they are st
 
 ## Examples
 
-I make not a release for every example. For all example resources take a look in the `resources` folder of the GitHub repository
+I make not a release for every example. For all example resources take a look in the `resources` folder of the GitHub
+repository
 
 ## Other Composer Or NPM Command
 
@@ -96,6 +99,10 @@ class CustomAssetsCommand extends Command
 }
 
 ```
+
+## Add Custom CSS
+
+Create `resources/Nova/custom.css` with Your custom CSS.
 
 ## Register new pages
 

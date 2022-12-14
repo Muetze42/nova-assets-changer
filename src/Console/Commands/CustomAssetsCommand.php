@@ -83,16 +83,33 @@ class CustomAssetsCommand extends Command
         $this->process = new Process;
         $this->novaPath = base_path($this->novaPath);
 
-        $this->reinstallNova();
-        $this->webpack();
-        $this->npmInstall();
+//        $this->reinstallNova();
+//        $this->webpack();
+//        $this->npmInstall();
         $this->replaceComponents();
         $this->registerPages();
+        $this->addCustomCSS();
         $this->npmProduction();
         $this->publishNovaAssets();
         $this->saveCurrentNovaVersion();
 
         return 0;
+    }
+
+    /**
+     * @return void
+     */
+    protected function addCustomCSS(): void
+    {
+        $file = 'custom.css';
+        if ($this->storage->exists($file)) {
+            $this->info(__('Register Nova custom CSS'));
+            $content = $this->storage->get($file);
+            $this->novaStorage->put('resources/css/'.$file, $content);
+            $cssContent = $this->novaStorage->get('resources/css/app.css');
+            $cssContent = str_replace("@import 'nova';", "@import 'nova';\n@import '".$file."';", $cssContent);
+            $this->novaStorage->put('resources/css/app.css', $cssContent);
+        }
     }
 
     /**
@@ -116,7 +133,7 @@ class CustomAssetsCommand extends Command
                 $content = $this->novaStorage->get('resources/js/app.js');
                 if (!str_contains($content, 'Nova.'.$basename)) {
                     $content = str_replace("'Nova.Login': require('@/pages/Login').default,",
-                        "'Nova.Login': require('@/pages/Login').default,\n      'Nova.Register': require('@/pages/".$basename."').default,",
+                        "'Nova.Login': require('@/pages/Login').default,\n      'Nova.".$info['filename']."': require('@/pages/".$basename."').default,",
                         $content);
 
                     $this->novaStorage->put('resources/js/app.js', $content);
@@ -140,6 +157,7 @@ class CustomAssetsCommand extends Command
     protected function publishNovaAssets(): void
     {
         $this->info('Publish Nova assets');
+        usleep(250000);
         $this->call('vendor:publish', [
             '--tag'   => 'nova-assets',
             '--force' => true,
@@ -151,19 +169,9 @@ class CustomAssetsCommand extends Command
      */
     protected function npmProduction(): void
     {
-        $fontsCSS = $this->novaStorage->get('resources/css/fonts.css');
-        $novaCSS = $this->novaStorage->get('resources/css/nova.css');
-        $appCSS = $this->novaStorage->get('resources/css/app.css');
-        $replace = [
-            '@import \'nova\';' => $novaCSS,
-            '@import \'fonts\';' => $fontsCSS,
-            '@import \'tailwindcss/components\';' => '@import \'tailwindcss/components\';' . PHP_EOL . '@import \'tailwindcss/utilities\';',
-        ];
-        $appCSS = str_replace(array_keys($replace), array_values($replace), $appCSS);
-        $this->novaStorage->put('resources/css/app.css', $appCSS);
-
         $this->info('Run NPM production');
-        $command = 'cd '.$this->novaPath.' && '.$this->npmCommand.' run production';
+        $novaPath = rtrim(str_replace(['/', '\\'], DIRECTORY_SEPARATOR, $this->novaPath), '/\\').DIRECTORY_SEPARATOR;
+        $command = 'cd '.$novaPath.' && '.$this->npmCommand.' run production';
         $this->process->runCommand($command);
         foreach ($this->process->getOutput() as $output) {
             $this->line($output);
