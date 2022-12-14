@@ -116,7 +116,7 @@ class CustomAssetsCommand extends Command
                 $content = $this->novaStorage->get('resources/js/app.js');
                 if (!str_contains($content, 'Nova.'.$basename)) {
                     $content = str_replace("'Nova.Login': require('@/pages/Login').default,",
-                        "'Nova.Login': require('@/pages/Login').default,\n      'Nova.Register': require('@/pages/".$basename."').default,",
+                        "'Nova.Login': require('@/pages/Login').default,\n      'Nova.".$info['filename']."': require('@/pages/".$basename."').default,",
                         $content);
 
                     $this->novaStorage->put('resources/js/app.js', $content);
@@ -151,19 +151,9 @@ class CustomAssetsCommand extends Command
      */
     protected function npmProduction(): void
     {
-        $fontsCSS = $this->novaStorage->get('resources/css/fonts.css');
-        $novaCSS = $this->novaStorage->get('resources/css/nova.css');
-        $appCSS = $this->novaStorage->get('resources/css/app.css');
-        $replace = [
-            '@import \'nova\';' => $novaCSS,
-            '@import \'fonts\';' => $fontsCSS,
-            '@import \'tailwindcss/components\';' => '@import \'tailwindcss/components\';' . PHP_EOL . '@import \'tailwindcss/utilities\';',
-        ];
-        $appCSS = str_replace(array_keys($replace), array_values($replace), $appCSS);
-        $this->novaStorage->put('resources/css/app.css', $appCSS);
-
         $this->info('Run NPM production');
-        $command = 'cd '.$this->novaPath.' && '.$this->npmCommand.' run production';
+        $novaPath = rtrim(str_replace(['/', '\\'], DIRECTORY_SEPARATOR, $this->novaPath), '/\\').DIRECTORY_SEPARATOR;
+        $command = 'cd '.$novaPath.' && '.$this->npmCommand.' run production';
         $this->process->runCommand($command);
         foreach ($this->process->getOutput() as $output) {
             $this->line($output);
