@@ -83,16 +83,33 @@ class CustomAssetsCommand extends Command
         $this->process = new Process;
         $this->novaPath = base_path($this->novaPath);
 
-        $this->reinstallNova();
-        $this->webpack();
-        $this->npmInstall();
+//        $this->reinstallNova();
+//        $this->webpack();
+//        $this->npmInstall();
         $this->replaceComponents();
         $this->registerPages();
+        $this->addCustomCSS();
         $this->npmProduction();
         $this->publishNovaAssets();
         $this->saveCurrentNovaVersion();
 
         return 0;
+    }
+
+    /**
+     * @return void
+     */
+    protected function addCustomCSS(): void
+    {
+        $file = 'custom.css';
+        if ($this->storage->exists($file)) {
+            $this->info(__('Register Nova custom CSS'));
+            $content = $this->storage->get($file);
+            $this->novaStorage->put('resources/css/'.$file, $content);
+            $cssContent = $this->novaStorage->get('resources/css/app.css');
+            $cssContent = str_replace("@import 'nova';", "@import 'nova';\n@import '".$file."';", $cssContent);
+            $this->novaStorage->put('resources/css/app.css', $cssContent);
+        }
     }
 
     /**
@@ -140,6 +157,7 @@ class CustomAssetsCommand extends Command
     protected function publishNovaAssets(): void
     {
         $this->info('Publish Nova assets');
+        usleep(250000);
         $this->call('vendor:publish', [
             '--tag'   => 'nova-assets',
             '--force' => true,
