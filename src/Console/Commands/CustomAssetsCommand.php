@@ -83,9 +83,9 @@ class CustomAssetsCommand extends Command
         $this->process = new Process;
         $this->novaPath = base_path($this->novaPath);
 
-//        $this->reinstallNova();
-//        $this->webpack();
-//        $this->npmInstall();
+        $this->reinstallNova();
+        $this->webpack();
+        $this->npmInstall();
         $this->replaceComponents();
         $this->registerPages();
         $this->addCustomCSS();
