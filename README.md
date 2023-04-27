@@ -35,7 +35,7 @@ php artisan nova:custom-assets
 #### Run Command Only If A Nova Update Is Detected (Or The Package Has No Version Saved)
 
 ```
-php aritsan custom-assets:after-composer-update
+php artisan custom-assets:after-composer-update
 ```
 
 #### Publish Nova Assets Via Command
