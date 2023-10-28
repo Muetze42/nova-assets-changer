@@ -50,7 +50,7 @@ php artisan custom-assets:publish
 php artisan custom-assets:publish:field
 ```
 
-Publish example resources
+Publish example resources (**deprecated** files)
 
 ```
 php artisan vendor:publish --provider="NormanHuth\NovaAssetsChanger\PackageServiceProvider"
@@ -109,7 +109,6 @@ Example: [Register Page](/docs/register-page.md)
 ---
 [![More Laravel Nova Packages](https://raw.githubusercontent.com/Muetze42/asset-repo/main/svg/more-laravel-nova-packages.svg)](https://huth.it/nova-packages)
 
+___
 
 [![Stand With Ukraine](https://raw.githubusercontent.com/vshymanskyy/StandWithUkraine/main/banner2-direct.svg)](https://vshymanskyy.github.io/StandWithUkraine/)
-
-[![Woman. Life. Freedom.](https://raw.githubusercontent.com/Muetze42/Muetze42/2033b219c6cce0cb656c34da5246434c27919bcd/files/iran-banner-big.svg)](https://linktr.ee/CurrentPetitionsFreeIran)

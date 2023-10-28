@@ -75,8 +75,8 @@ class CustomAssetsCommand extends Command
     /**
      * Execute the console command.
      *
-     * @return int
      * @throws JsonException
+     * @return int
      */
     public function handle(): int
     {
@@ -86,6 +86,7 @@ class CustomAssetsCommand extends Command
         $this->reinstallNova();
         $this->webpack();
         $this->npmInstall();
+        $this->postCssConfig();
         $this->replaceComponents();
         $this->registerPages();
         $this->addCustomCSS();
@@ -105,9 +106,9 @@ class CustomAssetsCommand extends Command
         if ($this->storage->exists($file)) {
             $this->info(__('Register Nova custom CSS'));
             $content = $this->storage->get($file);
-            $this->novaStorage->put('resources/css/'.$file, $content);
+            $this->novaStorage->put('resources/css/' . $file, $content);
             $cssContent = $this->novaStorage->get('resources/css/app.css');
-            $cssContent = str_replace("@import 'nova';", "@import 'nova';\n@import '".$file."';", $cssContent);
+            $cssContent = str_replace("@import 'nova';", "@import 'nova';\n@import '" . $file . "';", $cssContent);
             $this->novaStorage->put('resources/css/app.css', $cssContent);
         }
     }
@@ -121,19 +122,19 @@ class CustomAssetsCommand extends Command
         foreach ($files as $file) {
             $info = pathinfo($file);
             $basename = basename($file);
-            if ($this->novaStorage->exists('resources/js/pages/'.$basename)) {
+            if ($this->novaStorage->exists('resources/js/pages/' . $basename)) {
                 $this->error(__('Skip `:file`. File already exist in Nova', ['file' => $file]));
                 continue;
             }
             if ($info['extension'] == 'vue') {
-                $this->info('Register '.$file);
+                $this->info('Register ' . $file);
                 $content = $this->storage->get($file);
-                $this->novaStorage->put('resources/js/pages/'.$basename, $content);
+                $this->novaStorage->put('resources/js/pages/' . $basename, $content);
 
                 $content = $this->novaStorage->get('resources/js/app.js');
-                if (!str_contains($content, 'Nova.'.$basename)) {
+                if (!str_contains($content, 'Nova.' . $basename)) {
                     $content = str_replace("'Nova.Login': require('@/pages/Login').default,",
-                        "'Nova.Login': require('@/pages/Login').default,\n      'Nova.".$info['filename']."': require('@/pages/".$basename."').default,",
+                        "'Nova.Login': require('@/pages/Login').default,\n      'Nova." . $info['filename'] . "': require('@/pages/" . $basename . "').default,",
                         $content);
 
                     $this->novaStorage->put('resources/js/app.js', $content);
@@ -143,8 +144,8 @@ class CustomAssetsCommand extends Command
     }
 
     /**
-     * @return void
      * @throws JsonException
+     * @return void
      */
     protected function saveCurrentNovaVersion(): void
     {
@@ -159,7 +160,7 @@ class CustomAssetsCommand extends Command
         $this->info('Publish Nova assets');
         usleep(250000);
         $this->call('vendor:publish', [
-            '--tag'   => 'nova-assets',
+            '--tag' => 'nova-assets',
             '--force' => true,
         ]);
     }
@@ -170,8 +171,8 @@ class CustomAssetsCommand extends Command
     protected function npmProduction(): void
     {
         $this->info('Run NPM production');
-        $novaPath = rtrim(str_replace(['/', '\\'], DIRECTORY_SEPARATOR, $this->novaPath), '/\\').DIRECTORY_SEPARATOR;
-        $command = 'cd '.$novaPath.' && '.$this->npmCommand.' run production';
+        $novaPath = rtrim(str_replace(['/', '\\'], DIRECTORY_SEPARATOR, $this->novaPath), '/\\') . DIRECTORY_SEPARATOR;
+        $command = 'cd ' . $novaPath . ' && ' . $this->npmCommand . ' run production';
         $this->process->runCommand($command);
         foreach ($this->process->getOutput() as $output) {
             $this->line($output);
@@ -185,7 +186,7 @@ class CustomAssetsCommand extends Command
     {
         $this->info('Reinstall laravel/nova');
         $success = false;
-        $this->process->runCommand($this->composerCommand.' reinstall laravel/nova');
+        $this->process->runCommand($this->composerCommand . ' reinstall laravel/nova');
         foreach ($this->process->getOutput() as $output) {
             if (str_contains($output, $this->installStrContainsCheck1) && str_contains($output, $this->installStrContainsCheck2)) {
                 $success = true;
@@ -200,6 +201,7 @@ class CustomAssetsCommand extends Command
 
     /**
      * @param string $path
+     *
      * @return void
      */
     protected function replaceComponents(string $path = 'Nova'): void
@@ -207,26 +209,26 @@ class CustomAssetsCommand extends Command
         $files = $this->storage->files($path);
         foreach ($files as $file) {
             $base = explode('/', $file, 2)[1];
-            $this->info('Processing '.$base);
-            if ($this->novaStorage->missing('resources/'.$base)) {
-                $this->error('Skip file. `'.$base.'` not found in the Nova installation');
+            $this->info('Processing ' . $base);
+            if ($this->novaStorage->missing('resources/' . $base)) {
+                $this->error('Skip file. `' . $base . '` not found in the Nova installation');
                 continue;
             }
             $customContent = $this->storage->get($file);
-            $novaContent = $this->novaStorage->get('resources/'.$base);
-            if ($this->storage->missing('Backup/'.$base)) {
-                $this->storage->put('Backup/'.$base, $novaContent);
+            $novaContent = $this->novaStorage->get('resources/' . $base);
+            if ($this->storage->missing('Backup/' . $base)) {
+                $this->storage->put('Backup/' . $base, $novaContent);
             } else {
-                $backupContent = $this->storage->get('Backup/'.$base);
+                $backupContent = $this->storage->get('Backup/' . $base);
                 if (trim($backupContent) != trim($novaContent)) {
-                    if (!$this->confirm('The `'.$base.'` file seems to have changed. Do you wish to continue and renew the backup file?')) {
+                    if (!$this->confirm('The `' . $base . '` file seems to have changed. Do you wish to continue and renew the backup file?')) {
                         $this->error('Abort');
                         die();
                     }
-                    $this->storage->put('Backup/'.$base, $novaContent);
+                    $this->storage->put('Backup/' . $base, $novaContent);
                 }
 
-                $this->novaStorage->put('resources/'.$base, $customContent);
+                $this->novaStorage->put('resources/' . $base, $customContent);
             }
         }
         $directories = $this->storage->directories($path);
@@ -241,9 +243,21 @@ class CustomAssetsCommand extends Command
     protected function npmInstall(): void
     {
         $this->info('Run NPM install');
-        $this->process->runCommand('cd '.$this->novaPath.' && '.$this->npmCommand.' i');
+        $this->process->runCommand('cd ' . $this->novaPath . ' && ' . $this->npmCommand . ' ci');
         foreach ($this->process->getOutput() as $output) {
             $this->line($output);
+        }
+    }
+
+    protected function postCssConfig(): void
+    {
+        if (!$this->novaStorage->exists('postcss.config.js')) {
+            $this->info('postcss.config.js');
+            $contents = file_get_contents(
+                dirname(__DIR__, 3) . '/stubs/postcss.config.js.stub'
+            );
+
+            $this->novaStorage->put('postcss.config.js', $contents);
         }
     }
 
