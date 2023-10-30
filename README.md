@@ -50,12 +50,6 @@ php artisan custom-assets:publish
 php artisan custom-assets:publish:field
 ```
 
-Publish example resources
-
-```
-php artisan vendor:publish --provider="NormanHuth\NovaAssetsChanger\PackageServiceProvider"
-```
-
 ## Notice
 
 After a Nova update, you need to check your resource files to see if they are still compatible.
