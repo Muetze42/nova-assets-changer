@@ -13,6 +13,7 @@ class PackageServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        /* @deprecated */
         $this->publishes([
             __DIR__.'/../resources' => resource_path('Nova'),
         ]);
