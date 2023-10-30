@@ -50,7 +50,7 @@ php artisan custom-assets:publish
 php artisan custom-assets:publish:field
 ```
 
-Publish example resources (**deprecated** files)
+Publish example resources
 
 ```
 php artisan vendor:publish --provider="NormanHuth\NovaAssetsChanger\PackageServiceProvider"
@@ -63,7 +63,9 @@ After a Nova update, you need to check your resource files to see if they are st
 ## Examples
 
 I make not a release for every example. For all example resources take a look in the `resources` folder of the GitHub
-repository
+repository.
+
+⚠️ These files are all based on one of the first Nova 4 releases and serve only as an example! ⚠️
 
 ## Other Composer Or NPM Command
 
