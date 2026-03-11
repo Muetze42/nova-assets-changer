@@ -131,13 +131,13 @@ class CustomAssetsCommand extends Command
                 $content = $this->storage->get($file);
                 $this->novaStorage->put('resources/js/pages/' . $basename, $content);
 
-                $content = $this->novaStorage->get('resources/js/app.js');
+                $content = $this->novaStorage->get('resources/js/nova.js');
                 if (!str_contains($content, 'Nova.' . $basename)) {
                     $content = str_replace("'Nova.Login': require('@/pages/Login').default,",
                         "'Nova.Login': require('@/pages/Login').default,\n      'Nova." . $info['filename'] . "': require('@/pages/" . $basename . "').default,",
                         $content);
 
-                    $this->novaStorage->put('resources/js/app.js', $content);
+                    $this->novaStorage->put('resources/js/nova.js', $content);
                 }
             }
         }
