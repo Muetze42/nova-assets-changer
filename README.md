@@ -1,3 +1,13 @@
+## 📦 Archived
+
+This repository is archived and no longer maintained.
+
+If you offer, maintain, or know of an actively maintained alternative to this project, please contact me at **[maintainers@huth.it](mailto:maintainers@huth.it)**.
+
+If the alternative references this repository as its source, inspiration, predecessor, or migration path, I may list it here so existing users can find a maintained replacement.
+
+---
+
 # Nova Assets Changer
 
 This package is for Nova 4 and swaps the resources from the `resources/Nova/Nova` folder with those in
